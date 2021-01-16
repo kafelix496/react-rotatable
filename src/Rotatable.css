@@ -1,0 +1,10 @@
+.react-rotatable-handle {
+  position: absolute;
+  left: -13px;
+  top: -13px;
+  width: 12px;
+  height: 12px;
+  cursor: url(data:image/png;base64,AAACAAEAICAAAAoACgAwAQAAFgAAACgAAAAgAAAAQAAAAAEAAQAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPgAAAMGAAAEAQAACPiAAAkEgAASAkAAEiJAABJSQAASI8AAEsJAAAmnwAAIlIAABA+AAAMIAAAAkAAAAKAAAADAAAAAAAAA////////////////////////////////////////////////////////////////////////////B////AH///gA///wAH//8Ph//+H8P//h3D//4Yw//+HcP//hPD//8Bg///AIf//4AH///Af///8P////H////z////////8=), default;
+  background-image: url(./rotate.svg);
+  background-size: contain;
+}

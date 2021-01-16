@@ -50,7 +50,7 @@ const results = (umdName, external) => [
   }
 ]
 
-export default results('kaReactTs', { react: 'React' }).map((object) => ({
+export default results('kaRotatable', { react: 'React' }).map((object) => ({
   ...common(true),
   ...object
 }))
