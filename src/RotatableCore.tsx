@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { compose } from 'ramda'
-import { addEvent, removeEvent } from '@kafelix496/dom'
+import { addClass, addEvent, removeClass, removeEvent } from '@kafelix496/dom'
 import {
   stringToArray,
   arrayToString,
@@ -11,11 +11,12 @@ import {
 } from '@kafelix496/matrix'
 import { useRefWithSetter } from '@kafelix496/react-hooks'
 
-import type { InitialData, Ui, RotatableProps } from './interfaces'
+import type { InitialData, Ui, RotatableProps, Coordinate } from './interfaces'
 
 import { getDegreeOfTwoPoint } from './utils'
 
 interface RotatableCoreProps extends RotatableProps {
+  handleRef: { current: HTMLElement | null }
   targetRef: {
     current: HTMLElement | null
   }
@@ -27,6 +28,7 @@ const RotatableCore: React.FC<RotatableCoreProps> = (props): JSX.Element => {
   const {
     children,
     disabled = false,
+    rotatingClassName = '',
     step = 5,
     targetRef,
     handleRef,
@@ -47,7 +49,10 @@ const RotatableCore: React.FC<RotatableCoreProps> = (props): JSX.Element => {
     startDegree: NaN,
     currentDegree: NaN
   })
-  const [currentMouseCoordinateRef, setCurrentMouseCoordinate] = useRefWithSetter({
+  const [
+    currentMouseCoordinateRef,
+    setCurrentMouseCoordinate
+  ] = useRefWithSetter<Coordinate>({
     x: NaN,
     y: NaN
   })
@@ -63,14 +68,18 @@ const RotatableCore: React.FC<RotatableCoreProps> = (props): JSX.Element => {
 
   React.useEffect(() => {
     const mouseDownHandle = (event: MouseEvent): void => {
-      if (disabled || targetRef.current === null) {
+      if (disabled) {
+        return
+      }
+
+      const targetElement = targetRef.current
+
+      if (targetElement === null) {
         return
       }
 
       setInitialData((prev) => {
-        const targetNodeComputedStyle = window.getComputedStyle(
-          targetRef.current as HTMLElement
-        )
+        const targetNodeComputedStyle = window.getComputedStyle(targetElement)
         const targetNodeTransformMatrix = stringToArray(targetNodeComputedStyle.transform)
 
         return {
@@ -81,10 +90,14 @@ const RotatableCore: React.FC<RotatableCoreProps> = (props): JSX.Element => {
           },
           targetNodeCenterCoordinate: {
             x:
-              parseFloat(targetNodeComputedStyle.left) +
+              (targetNodeComputedStyle.left !== ''
+                ? parseFloat(targetNodeComputedStyle.left)
+                : targetElement.offsetLeft) +
               parseFloat(targetNodeComputedStyle.width) * 0.5,
             y:
-              parseFloat(targetNodeComputedStyle.top) +
+              (targetNodeComputedStyle.top !== ''
+                ? parseFloat(targetNodeComputedStyle.top)
+                : targetElement.offsetTop) +
               parseFloat(targetNodeComputedStyle.height) * 0.5
           },
           targetNodeDegree: getRotateZ(targetNodeTransformMatrix),
@@ -97,6 +110,10 @@ const RotatableCore: React.FC<RotatableCoreProps> = (props): JSX.Element => {
         startDegree: initialDataRef.current.targetNodeDegree,
         currentDegree: initialDataRef.current.targetNodeDegree
       }))
+
+      if (rotatingClassName.length > 0) {
+        addClass(rotatingClassName, targetElement)
+      }
 
       if (typeof rotateStart === 'function') {
         rotateStart(event, uiData.current)
@@ -152,10 +169,6 @@ const RotatableCore: React.FC<RotatableCoreProps> = (props): JSX.Element => {
       if (targetRef.current?.style !== undefined) {
         setCurrentMouseCoordinate({ x: event.clientX, y: event.clientY })
 
-        if (typeof rotating === 'function') {
-          rotating(event, uiData.current)
-        }
-
         const mouseDegree = getDegreeOfTwoPoint(
           initialDataRef.current.targetNodeCenterCoordinate,
           currentMouseCoordinateRef.current
@@ -189,22 +202,32 @@ const RotatableCore: React.FC<RotatableCoreProps> = (props): JSX.Element => {
         )(variation)
 
         targetRef.current.style.transform = newMatrixString
+
+        if (typeof rotating === 'function') {
+          rotating(event, uiData.current)
+        }
       }
     }
     const mouseUpHandler = (event: MouseEvent): void => {
-      setMouseDownStatus(false)
+      const targetElement = targetRef.current
+
+      if (targetElement !== null && rotatingClassName.length > 0) {
+        removeClass(rotatingClassName, targetElement)
+      }
 
       if (typeof rotateStop === 'function') {
         rotateStop(event, uiData.current)
-
-        setInitialData({
-          mouseCoordinate: { x: NaN, y: NaN },
-          mouseDegree: NaN,
-          targetNodeCenterCoordinate: { x: NaN, y: NaN },
-          targetNodeDegree: NaN,
-          targetNodeTransformMatrix: [[]]
-        })
       }
+
+      setInitialData({
+        mouseCoordinate: { x: NaN, y: NaN },
+        mouseDegree: NaN,
+        targetNodeCenterCoordinate: { x: NaN, y: NaN },
+        targetNodeDegree: NaN,
+        targetNodeTransformMatrix: [[]]
+      })
+
+      setMouseDownStatus(false)
     }
 
     if (isMouseDown) {

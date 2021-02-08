@@ -1,7 +1,6 @@
 import React from 'react'
 
 import RotatableCore from './RotatableCore'
-
 import type { RotatableProps } from './interfaces'
 
 import { setStyle } from '@kafelix496/dom'
@@ -16,18 +15,18 @@ const Rotatable: React.FC<RotatableProps> = (props): JSX.Element => {
   const targetRef = React.useRef<HTMLElement>(null)
   const handleRef = React.useRef<HTMLElement>(null)
 
+  const childrenClassName = (children.props.className ?? '') as string
+
   React.useEffect(() => {
-    if (disabled && handleRef.current !== null) {
+    if (handleRef.current !== null && disabled) {
       setStyle({ cursor: 'not-allowed' }, handleRef.current)
     }
-  }, [disabled])
+  }, [handleRef.current, disabled])
 
   return (
     <RotatableCore {...props} targetRef={targetRef} handleRef={handleRef}>
       {React.cloneElement(React.Children.only(children), {
-        className: (
-          ((children?.props?.className ?? '') as string) + ' react-rotatable'
-        ).trimLeft(),
+        className: (childrenClassName + ' react-rotatable').trim(),
         ref: targetRef,
         children: (
           <>

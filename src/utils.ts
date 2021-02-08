@@ -1,8 +1,12 @@
-import { subtract, prop, converge, __, multiply, compose, add, modulo } from 'ramda'
+import { subtract, prop, converge, __, multiply, compose, add, modulo, flip } from 'ramda'
 
 import type { Coordinate, Degree } from './interfaces'
 
-const rad2degree = compose(modulo(__, 360), add(__, 360), multiply(__, 180 / Math.PI))
+const rad2degree = compose(
+  flip(modulo)(360),
+  flip(add)(360),
+  flip(multiply)(180 / Math.PI)
+)
 const getDegreeOfTwoPoint = (
   centerCoordinate: Coordinate,
   targetCoordinate: Coordinate
@@ -15,7 +19,4 @@ const getDegreeOfTwoPoint = (
   return rad2degree(Math.atan2(distanceFromTwoPoint('y'), distanceFromTwoPoint('x')))
 }
 
-export {
-  // eslint-disable-next-line import/prefer-default-export
-  getDegreeOfTwoPoint
-}
+export { getDegreeOfTwoPoint }

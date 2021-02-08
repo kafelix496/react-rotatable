@@ -3,6 +3,7 @@ import resolve from '@rollup/plugin-node-resolve'
 import { terser } from 'rollup-plugin-terser'
 import typescript from 'rollup-plugin-typescript2'
 import pkg from './package.json'
+import css from 'rollup-plugin-import-css'
 
 const common = (isProd) => ({
   plugins: [
@@ -17,7 +18,8 @@ const common = (isProd) => ({
       clean: true,
       useTsconfigDeclarationDir: true,
       tsconfig: './tsconfig.bundle.json'
-    })
+    }),
+    css()
   ]
 })
 
@@ -50,7 +52,7 @@ const results = (umdName, external) => [
   }
 ]
 
-export default results('kaRotatable', { react: 'React' }).map((object) => ({
+export default results('kaRotatable', { react: 'React', ramda: 'R' }).map((object) => ({
   ...common(true),
   ...object
 }))
