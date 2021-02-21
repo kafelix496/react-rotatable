@@ -16,10 +16,8 @@ import type { InitialData, Ui, RotatableProps, Coordinate } from './interfaces'
 import { getDegreeOfTwoPoint } from './utils'
 
 interface RotatableCoreProps extends RotatableProps {
-  handleRef: { current: HTMLElement | null }
-  targetRef: {
-    current: HTMLElement | null
-  }
+  handleRef: React.MutableRefObject<HTMLElement | null>
+  targetRef: React.MutableRefObject<HTMLElement | null>
 }
 
 const RotatableCore: React.FC<RotatableCoreProps> = (props): JSX.Element => {

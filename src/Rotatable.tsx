@@ -11,7 +11,7 @@ const Rotatable: React.FC<RotatableProps> = (props): JSX.Element => {
   const { children } = props
 
   const targetRef = React.useRef<HTMLElement>(null)
-  const handleRef = React.useRef<HTMLElement>(null)
+  const handleRef = React.useRef<HTMLDivElement>(null)
 
   const childrenClassName = (children.props.className ?? '') as string
 
@@ -24,7 +24,7 @@ const Rotatable: React.FC<RotatableProps> = (props): JSX.Element => {
           <>
             {children?.props?.children ?? ''}
 
-            {<RotatableHandle handleRef={handleRef as { current: HTMLDivElement }} />}
+            {<RotatableHandle handleRef={handleRef} />}
           </>
         )
       })}
