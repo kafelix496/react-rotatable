@@ -140,9 +140,12 @@ describe('Test Rotatable component', () => {
       uiValue = null
 
       fireEvent.mouseMove(rotateHandleElement, { clientX: 0, clientY: 50 })
-      expect(uiValue!.targetNode).toBe(testDiv)
-      expect(uiValue!.startDegree).toBe(0)
-      expect(uiValue!.currentDegree).toBeCloseTo(61.4, 1)
+      expect(uiValue).not.toBe(null)
+      if (uiValue !== null) {
+        expect((uiValue as Ui).targetNode).toBe(testDiv)
+        expect((uiValue as Ui).startDegree).toBe(0)
+        expect((uiValue as Ui).currentDegree).toBeCloseTo(61.4, 1)
+      }
       expect(((eventValue as unknown) as MouseEvent).type).toBe(
         new MouseEvent('mousemove').type
       )
@@ -150,9 +153,12 @@ describe('Test Rotatable component', () => {
       uiValue = null
 
       fireEvent.mouseUp(rotateHandleElement, { clientX: 0, clientY: 50 })
-      expect(uiValue!.targetNode).toBe(testDiv)
-      expect(uiValue!.startDegree).toBe(0)
-      expect(uiValue!.currentDegree).toBeCloseTo(61.4, 1)
+      expect(uiValue).not.toBe(null)
+      if (uiValue !== null) {
+        expect((uiValue as Ui).targetNode).toBe(testDiv)
+        expect((uiValue as Ui).startDegree).toBe(0)
+        expect((uiValue as Ui).currentDegree).toBeCloseTo(61.4, 1)
+      }
       expect(((eventValue as unknown) as MouseEvent).type).toBe(
         new MouseEvent('mouseup').type
       )
