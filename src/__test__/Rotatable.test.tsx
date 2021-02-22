@@ -228,11 +228,6 @@ describe('Test Rotatable component', () => {
       ) as HTMLElement
 
       setStyle({ position: 'absolute', left: '50px', top: '110px' }, rotateHandleElement)
-      expect(rotateHandleElement).toHaveStyle({
-        position: 'absolute',
-        left: '50px',
-        top: '110px'
-      })
 
       fireEvent.mouseDown(rotateHandleElement, { clientX: 50, clientY: 110 })
       expect(getElementRotateZ(testDiv)).toBe(0)
