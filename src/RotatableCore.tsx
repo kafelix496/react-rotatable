@@ -62,7 +62,7 @@ const RotatableCore: React.FC<RotatableCoreProps> = (props): JSX.Element => {
       ...prev,
       targetNode: targetRef.current
     }))
-  }, [targetRef.current])
+  }, [targetRef, setUiData])
 
   React.useEffect(() => {
     const mouseDownHandle = (event: MouseEvent): void => {
@@ -120,20 +120,32 @@ const RotatableCore: React.FC<RotatableCoreProps> = (props): JSX.Element => {
       setMouseDownStatus(true)
     }
 
-    if (handleRef.current !== null) {
+    const handleElement = handleRef.current
+
+    if (handleElement !== null) {
       if (disabled) {
-        removeEvent(handleRef.current, 'mousedown', mouseDownHandle as EventListener)
+        removeEvent(handleElement, 'mousedown', mouseDownHandle as EventListener)
       } else {
-        addEvent(handleRef.current, 'mousedown', mouseDownHandle as EventListener)
+        addEvent(handleElement, 'mousedown', mouseDownHandle as EventListener)
       }
     }
 
     return () => {
-      if (handleRef.current !== null) {
-        removeEvent(handleRef.current, 'mousedown', mouseDownHandle as EventListener)
+      if (handleElement !== null) {
+        removeEvent(handleElement, 'mousedown', mouseDownHandle as EventListener)
       }
     }
-  }, [handleRef.current, disabled])
+  }, [
+    handleRef,
+    disabled,
+    initialDataRef,
+    rotateStart,
+    rotatingClassName,
+    setInitialData,
+    setUiData,
+    targetRef,
+    uiData
+  ])
 
   /**
    * if initial mouse coordinate || target node center coodinate is changed
@@ -157,10 +169,7 @@ const RotatableCore: React.FC<RotatableCoreProps> = (props): JSX.Element => {
         mouseDegree: startDegree
       }))
     }
-  }, [
-    initialDataRef.current.mouseCoordinate,
-    initialDataRef.current.targetNodeCenterCoordinate
-  ])
+  }, [initialDataRef, setInitialData])
 
   React.useEffect(() => {
     const mouseMoveHandler = (event: MouseEvent): void => {
@@ -240,7 +249,20 @@ const RotatableCore: React.FC<RotatableCoreProps> = (props): JSX.Element => {
       removeEvent(document, 'mousemove', mouseMoveHandler as EventListener)
       removeEvent(document, 'mouseup', mouseUpHandler as EventListener)
     }
-  }, [isMouseDown])
+  }, [
+    isMouseDown,
+    currentMouseCoordinateRef,
+    initialDataRef,
+    rotateStop,
+    rotating,
+    rotatingClassName,
+    setCurrentMouseCoordinate,
+    setInitialData,
+    setUiData,
+    step,
+    targetRef,
+    uiData
+  ])
 
   return React.cloneElement(React.Children.only(children))
 }

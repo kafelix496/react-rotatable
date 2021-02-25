@@ -7,7 +7,8 @@
   "plugins": ["@typescript-eslint"],
   "extends": [
     "standard-with-typescript",
-    "plugin:jest/recommended"
+    "plugin:jest/recommended",
+    "plugin:react-hooks/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
